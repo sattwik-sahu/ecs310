@@ -1,5 +1,6 @@
 from random import randint
 from ecs310.heap import Heap, HeapNode
+from ecs310.sorting.utils import argsort
 
 
 class BinaryHeap(Heap):
@@ -13,7 +14,6 @@ class BinaryHeap(Heap):
         while True:
             p_inx, p_node = self._get_parent(insert_inx)
             if (node >= p_node) == self.is_max_heap:
-                print(f"switching {p_node} and {node}")
                 self.nodes[p_inx], self.nodes[insert_inx] = (
                     self.nodes[insert_inx],
                     self.nodes[p_inx],
@@ -31,25 +31,26 @@ class BinaryHeap(Heap):
 
         inx = 0
         while True:
-            c_inx, c_node = self._get_children(inx)[0]
-            if c_node is not None:
-                print(f"Found child of {self.nodes[inx]} - {c_node}")
-                if (self.nodes[inx] <= c_node) == self.is_max_heap:
-                    print(f"Switching {self.nodes[inx]} and {c_node}")
-                    self.nodes[c_inx], self.nodes[inx] = (
-                        self.nodes[inx],
-                        self.nodes[c_inx],
-                    )
-                    inx = c_inx
-                else:
-                    break
+            children = self._get_children(inx)
+
+            if len(children) == 0:
+                break
+            swap_inx = children[
+                argsort([c[1] for c in children], reverse=self.is_max_heap)[0]
+            ][0]
+            if (self.nodes[swap_inx] >= self.nodes[inx]) == self.is_max_heap:
+                self.nodes[inx], self.nodes[swap_inx] = (
+                    self.nodes[swap_inx],
+                    self.nodes[inx],
+                )
+                inx = swap_inx
             else:
                 break
 
         return pop_node
 
 
-h = BinaryHeap()
+h = BinaryHeap(is_max_heap=False)
 for i in range(10):
     h.insert(HeapNode(value=randint(-10, 10)))
     print(h.nodes)

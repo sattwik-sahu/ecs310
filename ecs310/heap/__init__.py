@@ -50,12 +50,12 @@ class Heap(ABC):
 
         return parent_inx, parent
 
-    def _get_children(self, inx: int) -> Tuple[HeapNode]:
-        children: List[Tuple[int, HeapNode]] = [(None, None)] * self.n_children_per_node
+    def _get_children(self, inx: int) -> Tuple[Tuple[int, HeapNode]]:
+        children: List[Tuple[int, HeapNode]] = []
         for i in range(self.n_children_per_node):
             c_inx = (inx * self.n_children_per_node) + (i + 1)
             if c_inx < len(self.nodes):
-                children[i] = (c_inx, self.nodes[c_inx])
+                children.append((c_inx, self.nodes[c_inx]))
 
         return tuple(children)
 
