@@ -14,7 +14,7 @@ class CountingSort(Sorting):
 
         x_sorted: List[T] = []
         for i, v in enumerate(freqs):
-            x_sorted.extend([i - x_min] * v)
+            x_sorted.extend([i + x_min] * v)
 
         return x_sorted[:: (-1) ** reverse]
 
